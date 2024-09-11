@@ -24,6 +24,7 @@ public:
 
 private:
     sf::RenderWindow* window;
+    sf::Vector2u windowSize;
 
     sf::Vector2f position;
     sf::Vector2f velocity;

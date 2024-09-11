@@ -5,7 +5,7 @@ Point::Point(float radius, sf::Vector2f initialPos, sf::Color color, sf::RenderW
     circleShape = new sf::CircleShape(radius);
     circleShape->setFillColor(color);
     window = &parentWindow;
-    auto windowSize = window->getSize();
+    windowSize = window->getSize();
     windowOffset = {windowSize.x/2 + radius, windowSize.y/2 + radius};
     position = {windowOffset.x + initialPos.x, windowOffset.y + initialPos.y};
     updatePos();
@@ -38,22 +38,21 @@ void Point::movePoint(sf::Keyboard::Key key)
     {
         velocity.y -= acceleration;
     }
-    else if (key == sf::Keyboard::Down)
+    if (key == sf::Keyboard::Down)
     {
         velocity.y += acceleration;
     }
-    else if (key == sf::Keyboard::Right)
+    if (key == sf::Keyboard::Right)
     {
         velocity.x += acceleration;
     }
-    else if (key == sf::Keyboard::Left)
+    if (key == sf::Keyboard::Left)
     {
         velocity.x -= acceleration;
     }
-    else
-    {
+    
+    if (key < 71 || key > 74)
         velocity = {0, 0};
-    }
 
     updatePos();
 }
@@ -66,6 +65,11 @@ sf::CircleShape Point::getShape()
 
 void Point::updatePos()
 {
-    position = {position.x + velocity.x, position.y + velocity.y};
+    sf::Vector2f newPos = {position.x + velocity.x, position.y + velocity.y};
+    if (newPos.x >= windowSize.x || newPos.x <= 0)
+        return;
+    if (newPos.y >= windowSize.y || newPos.y <= 0)
+        return;
+    position = {newPos.x, newPos.y};
     circleShape->setPosition(position);
 }
