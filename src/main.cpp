@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
-
-void movePoint(sf::CircleShape& point, sf::Event& event, sf::Vector2f& velocity);
+#include <point.hpp>
 
 int main(int argc, char *argv[])
 {
@@ -8,11 +7,7 @@ int main(int argc, char *argv[])
     auto window = sf::RenderWindow{ { 1080u, 720u }, "Moving Point" };
     window.setFramerateLimit(144);
 
-    sf::CircleShape point(20.f);
-    point.setFillColor(sf::Color(0, 255, 255));
-    point.setPosition(1080/2 - 20, 720/2 - 20);
-
-    sf::Vector2f currentVelocity = {0, 0};
+    Point point = Point(20.f, {0, 0}, sf::Color(0, 255, 255), window);
 
     // execution loop
     while (window.isOpen())
@@ -25,37 +20,17 @@ int main(int argc, char *argv[])
             }
             else if (event.type == sf::Event::KeyPressed)
             {
-                movePoint(point, event, currentVelocity);
+                point.movePoint(event.key.code);
+            }
+            else if (event.type == sf::Event::KeyReleased)
+            {
+                point.setVelocity({0, 0});
             }
         }
 
         window.clear();
         // Draw point on screen
-        window.draw(point);
+        point.draw();
         window.display();
     }
-}
-
-void movePoint(sf::CircleShape& point, sf::Event& event, sf::Vector2f& velocity)
-{
-    float acceleration = 10;
-
-    if (event.key.code == sf::Keyboard::Up)
-    {
-        velocity.y -= acceleration;
-    }
-    else if (event.key.code == sf::Keyboard::Down) 
-    {
-        velocity.y += acceleration;
-    }  
-    else if (event.key.code == sf::Keyboard::Left) 
-    {
-        velocity.x -= acceleration;
-    }  
-    else if (event.key.code == sf::Keyboard::Right) 
-    {
-        velocity.x += acceleration;
-    }  
-
-    point.move(velocity);
 }
